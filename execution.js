@@ -64,9 +64,9 @@
 
     <script>
       function getText() {
+        let wordMap = new Map();
         const inputText = document.getElementById("textInput").value;
-
-        console.log("Entered text:", inputText);
+        // console.log("Entered text:", inputText);
         class Node {
           constructor(data, degree, words, loclist) {
             this.data = data;
@@ -239,28 +239,40 @@
           //console.log(node.loclist);
           // console.log("\n");
         }
+        function insertMap(node, resultMap, paraId) {
+          if (!node) return;
 
-        function printTree(h) {
+          let concatenatedString = node.words.join(" ");
+          resultMap.set(concatenatedString, paraId); // Update directly with paraId
+
+          insertMap(node.child, resultMap, paraId);
+          insertMap(node.sibling, resultMap, paraId);
+        }
+
+        function printTree(h, resultMap, paraId) {
           while (h) {
-            printNode(h);
-            printTree(h.child);
+            insertMap(h, resultMap, paraId);
+            printTree(h.child, resultMap, paraId);
             h = h.sibling;
           }
         }
-        function printHeap(_heap) {
+
+        function printHeap(_heap, paraId) {
+          let resultMap = new Map();
           let tree = 0;
-          let itcount = 0;
           for (let i = 0; i < _heap.length; i++) {
-            // console.log(
-            //   "------------------------------------------------------Tree " +
-            //   ++tree +
-            //   "-------------------------------------------------------"
-            //  );
-            printTree(_heap[i]);
-            // console.log("hello");
+            printTree(_heap[i], resultMap, paraId); // Pass i as paraId
           }
+
+          // Print the resultMap if needed
+
+          resultMap.forEach((value, key) => {
+            wordMap.set(key, value);
+          });
+          wordMap.forEach((value, key) => {
+            console.log(`Concatenated string: ${key}, ParaId: ${value}`);
+          });
         }
-        let wordMap = new Map();
 
         function traverseConcat(node, paraId, result) {
           const concats = node.words.join(" ");
@@ -283,7 +295,10 @@
             console.log(`Key: ${key}, Value: ${value}`);
           });
         }
-
+        // printMap(wordMap);
+        wordMap.forEach((value, key) => {
+          console.log(`Concatenated string: ${key}, ParaId: ${value}`);
+        });
         function main(paraId) {
           let times = 0;
           let binHeap = [];
@@ -384,7 +399,7 @@
                   if (minnode2.words.length > 1) {
                     //    console.log("inserting into keywordlist\n");
                     keywordlist = insert(keywordlist, minnode2);
-                    printHeap(keywordlist);
+                    //   printHeap(keywordlist);
                   } else if (minnode2.data !== 0) {
                     minnode2.loclist = q2;
                     minnode2.data = minnode2.loclist.length;
@@ -410,10 +425,8 @@
               keywordlist.forEach((node) => {
                 node.words = [node.words.join(" ")];
               });
-              printHeap(keywordlist);
-              let map = new Map();
-              wordMap = traverseConcat(keywordlist, paraId, map);
-              printMap(wordMap);
+              printHeap(keywordlist, paraId);
+              // let map = new Map();
             })
             .catch((error) => {
               console.error("Error fetching or parsing JSON:", error);
@@ -448,20 +461,46 @@
           [flag, X] = decrChar(X);
           return X + Y + Z;
         }
-
         async function iterateFiles() {
           let paraId = "AAF";
           const stopId = "999";
 
           while (paraId !== stopId) {
             await main(paraId);
-
             paraId = predecessor(paraId);
           }
         }
-
         iterateFiles();
+        // Call the function containing the remaining code after iterateFiles completes
+       
+      
+
+      function executeRemainingCode() {
+        const inputText = document.getElementById("textInput").value;
+
+        if (wordMap.has(inputText)) {
+          const paraIds = wordMap.get(inputText);
+          const list = document.createElement("ul");
+          console.log("hi");
+          paraIds.forEach((paraId) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = paraId;
+            list.appendChild(listItem);
+          });
+
+          const button = document.createElement("button");
+          button.textContent = "Open";
+          document.body.appendChild(list);
+          document.body.appendChild(button);
+        }
+
+        console.log(inputText);
       }
+
+      async function exe() {
+        await iterateFiles();
+        await executeRemainingCode();
+      }}
     </script>
   </body>
 </html>
