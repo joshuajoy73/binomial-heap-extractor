@@ -260,6 +260,29 @@
             // console.log("hello");
           }
         }
+        let wordMap = new Map();
+
+        function traverseConcat(node, paraId, result) {
+          const concats = node.words.join(" ");
+          if (!result.has(concats)) {
+            result.set(concats, []);
+          }
+          result.get(concats).push(paraId);
+
+          let child = node.children;
+          while (child) {
+            traverseConcat(child, paraId, result);
+            child = child.sibling;
+          }
+
+          return result;
+        }
+
+        function printMap(map) {
+          map.forEach((value, key) => {
+            console.log(`Key: ${key}, Value: ${value}`);
+          });
+        }
 
         function main(paraId) {
           let times = 0;
@@ -356,7 +379,7 @@
                   if (minnode1.words.length > 1) {
                     //  console.log("inserting into keywordlist\n");
                     keywordlist = insert(keywordlist, minnode1);
-                    printHeap(keywordlist);
+                    //  printHeap(keywordlist);
                   }
                   if (minnode2.words.length > 1) {
                     //    console.log("inserting into keywordlist\n");
@@ -384,7 +407,13 @@
               ("------------------KEYWORDS-------------------------\n");
               //);
               //  console.log(keywordlist.length);
+              keywordlist.forEach((node) => {
+                node.words = [node.words.join(" ")];
+              });
               printHeap(keywordlist);
+              let map = new Map();
+              wordMap = traverseConcat(keywordlist, paraId, map);
+              printMap(wordMap);
             })
             .catch((error) => {
               console.error("Error fetching or parsing JSON:", error);
@@ -436,3 +465,4 @@
     </script>
   </body>
 </html>
+
