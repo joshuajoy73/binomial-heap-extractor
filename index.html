@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Text Input</title>
     <style>
       body {
@@ -542,8 +542,11 @@
             container.style.top = "500px";
             container.style.left = "50px";
           });
+        } else {
+          if (!wordMap.has(inputText)) {
+            alert("no keyword matches found");
+          }
         }
-
         console.log(inputText);
       }
       // while(!generatedmap){
