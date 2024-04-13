@@ -59,11 +59,12 @@
     <div class="container">
       <h2>Enter Text:</h2>
       <input type="text" id="textInput" />
-      <button onclick="getText()">Submit</button>
+      <button onclick="executeRemainingCode()">Submit</button>
     </div>
 
     <script>
-      function getText() {
+      //function getText() {
+        let generatedmap=false;
         let wordMap = new Map();
         const inputText = document.getElementById("textInput").value;
         // console.log("Entered text:", inputText);
@@ -243,10 +244,13 @@
           if (!node) return;
 
           let concatenatedString = node.words.join(" ");
-          resultMap.set(concatenatedString, paraId); // Update directly with paraId
+          if(!resultMap.has(concatenatedString)){
+            resultMap.set(concatenatedString,[]);
+          }
+          resultMap.get(concatenatedString).push(paraId); // Update directly with paraId
 
-          insertMap(node.child, resultMap, paraId);
-          insertMap(node.sibling, resultMap, paraId);
+          //insertMap(node.child, resultMap, paraId);
+          //insertMap(node.sibling, resultMap, paraId);
         }
 
         function printTree(h, resultMap, paraId) {
@@ -426,6 +430,7 @@
                 node.words = [node.words.join(" ")];
               });
               printHeap(keywordlist, paraId);
+              console.log("This is to check whether wordMap is filled properly. ",wordMap.size);
               // let map = new Map();
             })
             .catch((error) => {
@@ -435,7 +440,7 @@
           return 0;
         }
 
-        main();
+        //main();
         function decrChar(ch) {
           switch (ch) {
             case "A":
@@ -462,46 +467,51 @@
           return X + Y + Z;
         }
         async function iterateFiles() {
-          let paraId = "AAF";
+          let paraId = "AAA";
           const stopId = "999";
 
           while (paraId !== stopId) {
             await main(paraId);
             paraId = predecessor(paraId);
+            // if(paraId==stopId){
+            //   executeRemainingCode();
+            // }
           }
+          generatedmap=true;
         }
         iterateFiles();
+        console.log("iteratefiles called");
+        console.log(wordMap);
         // Call the function containing the remaining code after iterateFiles completes
-       
-      
 
-      function executeRemainingCode() {
-        const inputText = document.getElementById("textInput").value;
+        function executeRemainingCode() {
+          const inputText = document.getElementById("textInput").value;
+          console.log("I am in execute remaining code size of wordmap is",wordMap.size);
+          if (wordMap.has(inputText)) {
+            const paraIds = wordMap.get(inputText);
+            const list = document.createElement("ul");
+            //console.log("hi");
+            console.log("paraIds ",paraIds);
+            paraIds.forEach((paraId) => {
+              const listItem = document.createElement("li");
+              listItem.textContent = paraId;
+              list.appendChild(listItem);
+            });
 
-        if (wordMap.has(inputText)) {
-          const paraIds = wordMap.get(inputText);
-          const list = document.createElement("ul");
-          console.log("hi");
-          paraIds.forEach((paraId) => {
-            const listItem = document.createElement("li");
-            listItem.textContent = paraId;
-            list.appendChild(listItem);
-          });
+            const button = document.createElement("button");
+            button.textContent = "Open";
+            document.body.appendChild(list);
+            document.body.appendChild(button);
+          }
 
-          const button = document.createElement("button");
-          button.textContent = "Open";
-          document.body.appendChild(list);
-          document.body.appendChild(button);
+          console.log(inputText);
         }
-
-        console.log(inputText);
-      }
-
-      async function exe() {
-        await iterateFiles();
-        await executeRemainingCode();
-      }}
+        // while(!generatedmap){
+        //   ;
+        // }
+        console.log("I am outside");
+        executeRemainingCode();
+      //}
     </script>
   </body>
 </html>
-
