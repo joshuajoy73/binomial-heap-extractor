@@ -4,57 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Text Input</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f4f4f4;
-      }
-
-      .container {
-        width: 300px;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-top: -700px;
-      }
-
-      h2 {
-        margin-top: 0;
-        margin-bottom: 20px;
-        color: #333;
-      }
-
-      input[type="text"] {
-        width: calc(100% - 10px);
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-        font-size: 16px;
-      }
-
-      button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-
-      button:hover {
-        background-color: #0056b3;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
@@ -64,12 +13,10 @@
     </div>
 
     <script>
-      //function getText() {
       para = new Map();
       let generatedmap = false;
       let wordMap = new Map();
       const inputText = document.getElementById("textInput").value;
-      // console.log("Entered text:", inputText);
       class Node {
         constructor(data, degree, words, loclist) {
           this.data = data;
@@ -236,11 +183,7 @@
         return new_heap;
       }
       function printNode(node) {
-        //console.log("(", node.words.length, ")");
         console.log(node.words);
-        //console.log("freq = ", node.data, " loc_list = ");
-        //console.log(node.loclist);
-        // console.log("\n");
       }
       function insertMap(node, resultMap, paraId) {
         if (!node) return;
@@ -249,8 +192,7 @@
         if (!resultMap.has(concatenatedString)) {
           resultMap.set(concatenatedString, []);
         }
-        resultMap.get(concatenatedString).push(paraId); // Update directly with paraId
-
+        resultMap.get(concatenatedString).push(paraId); 
       }
 
       function printTree(h, resultMap, paraId) {
@@ -265,10 +207,8 @@
         let resultMap = new Map();
         let tree = 0;
         for (let i = 0; i < _heap.length; i++) {
-          printTree(_heap[i], resultMap, paraId); // Pass i as paraId
+          printTree(_heap[i], resultMap, paraId); 
         }
-
-        // Print the resultMap if needed
 
         resultMap.forEach((value, key) => {
           wordMap.set(key, value);
@@ -293,32 +233,11 @@
 
         return result;
       }
-      async function getTextFromJson(paraId) {
-        try {
-          const response = await fetch(paraId + ".json");
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          const jsonData = await response.json();
-
-          const words = jsonData.map((obj) => obj.word);
-          const paragraph = words.join(" ");
-          // console.log(paragraph);
-          return paragraph;
-        } catch (error) {
-          console.error("Error fetching or parsing JSON:", error);
-          return null;
-        }
-      }
-
       function printMap(map) {
         map.forEach((value, key) => {
           console.log(`Key: ${key}, Value: ${value}`);
         });
       }
-      wordMap.forEach((value, key) => {
-        console.log(`Concatenated string: ${key}, ParaId: ${value}`);
-      });
       function main(paraId) {
         let times = 0;
         let binHeap = [];
@@ -350,13 +269,8 @@
               paragraph += word + " ";
               position++;
             });
-            // console.log(paragraph);
-            // console.log("Words loaded from AAA.json:", positions);
             para.set(paraId, paragraph);
-            positions.forEach((value, key) => {
-            });
             positions.forEach((loclist, word) => {
-              //   console.log(loclist, word);
               if (loclist.length >= minsupport) {
                 let node = newNode(loclist.length, [word], loclist);
                 binHeap = insert(binHeap, node);
@@ -400,14 +314,10 @@
                 }
               } else {
                 if (minnode1.words.length > 1) {
-                  //  console.log("inserting into keywordlist\n");
                   keywordlist = insert(keywordlist, minnode1);
-                  //  printHeap(keywordlist);
                 }
                 if (minnode2.words.length > 1) {
-                  //    console.log("inserting into keywordlist\n");
                   keywordlist = insert(keywordlist, minnode2);
-                  //   printHeap(keywordlist);
                 } else if (minnode2.data !== 0) {
                   minnode2.loclist = q2;
                   minnode2.data = minnode2.loclist.length;
@@ -426,11 +336,6 @@
               node.words = [node.words.join(" ")];
             });
             printHeap(keywordlist, paraId);
-            console.log(
-              "This is to check whether wordMap is filled properly. ",
-              wordMap.size
-            );
-            // let map = new Map();
           })
           .catch((error) => {
             console.error("Error fetching or parsing JSON:", error);
@@ -438,6 +343,7 @@
 
         return 0;
       }
+
       function decrChar(ch) {
         switch (ch) {
           case "A":
@@ -474,8 +380,6 @@
         generatedmap = true;
       }
       iterateFiles();
-      console.log("iteratefiles called");
-      console.log(wordMap);
 
       function executeRemainingCode() {
         const inputText = document.getElementById("textInput").value;
@@ -485,37 +389,22 @@
           const button = document.createElement("button");
           button.textContent = "Open";
           document.body.appendChild(button);
-          button.style.position = "absolute";
-          button.style.top = "400px";
           button.addEventListener("click", () => {
             const container = document.createElement("div");
             paraIds.forEach((paraId) => {
-              const paragraph = document.createElement("p");
-              getTextFromJson()
-                .then((concatenatedText) => {
-                  console.log(concatenatedText);
-                })
-                .catch((error) => {
-                  console.error("Error:", or);
-                });
-              paragraph.textContent = para.get(paraId);
-              console.log(paragraph.textContent);
-              container.appendChild(paragraph);
+            const paragraph = document.createElement("p");
+            paragraph.textContent = para.get(paraId);
+            container.appendChild(paragraph);
             });
             document.body.appendChild(container);
-            container.style.position = "absolute";
-            container.style.top = "500px";
-            container.style.left = "50px";
           });
         } else {
           if (!wordMap.has(inputText)) {
-            alert("no keyword matches found");
+            //alert("no keyword matches found");
           }
         }
-        console.log(inputText);
       }
       executeRemainingCode();
-      //}
     </script>
   </body>
 </html>
