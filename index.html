@@ -251,8 +251,6 @@
         }
         resultMap.get(concatenatedString).push(paraId); // Update directly with paraId
 
-        //insertMap(node.child, resultMap, paraId);
-        //insertMap(node.sibling, resultMap, paraId);
       }
 
       function printTree(h, resultMap, paraId) {
@@ -318,7 +316,6 @@
           console.log(`Key: ${key}, Value: ${value}`);
         });
       }
-      // printMap(wordMap);
       wordMap.forEach((value, key) => {
         console.log(`Concatenated string: ${key}, ParaId: ${value}`);
       });
@@ -350,8 +347,6 @@
                 positions.set(word, []);
               }
               positions.get(word).push(position);
-              //console.log("printing it \n");
-              //   console.log(position, word, positions.get(word));
               paragraph += word + " ";
               position++;
             });
@@ -359,26 +354,14 @@
             // console.log("Words loaded from AAA.json:", positions);
             para.set(paraId, paragraph);
             positions.forEach((value, key) => {
-              //   console.log("wkdowjdo");
-              // console.log(key);
-              //  console.log(value);
             });
-            // console.log("how long is positions?\n");
-            // console.log(positions.length);
-            // Populate binHeap based on minsupport
             positions.forEach((loclist, word) => {
               //   console.log(loclist, word);
               if (loclist.length >= minsupport) {
                 let node = newNode(loclist.length, [word], loclist);
-                //  console.log("The node is \n");
-                //  console.log(node);
                 binHeap = insert(binHeap, node);
-                //  console.log(node.words);
-                //   console.log("h");
               }
             });
-            //   console.log(binHeap.length);
-            // Main loop to process the binHeap
             while (
               binHeap.length > 1 ||
               (binHeap.length === 1 && binHeap[0].degree > 0)
@@ -432,8 +415,6 @@
                 }
               }
             }
-
-            // Process remaining elements in binHeap if any
             if (binHeap.length) {
               let minnode = getMin(binHeap);
               binHeap = extractMin(binHeap);
@@ -441,12 +422,6 @@
                 keywordlist = insert(keywordlist, minnode);
               }
             }
-
-            // Print keywords
-            //    console.log(
-            ("------------------KEYWORDS-------------------------\n");
-            //);
-            //  console.log(keywordlist.length);
             keywordlist.forEach((node) => {
               node.words = [node.words.join(" ")];
             });
@@ -463,8 +438,6 @@
 
         return 0;
       }
-
-      //main();
       function decrChar(ch) {
         switch (ch) {
           case "A":
@@ -497,23 +470,15 @@
         while (paraId !== stopId) {
           await main(paraId);
           paraId = predecessor(paraId);
-          // if(paraId==stopId){
-          //   executeRemainingCode();
-          // }
         }
         generatedmap = true;
       }
       iterateFiles();
       console.log("iteratefiles called");
       console.log(wordMap);
-      // Call the function containing the remaining code after iterateFiles completes
 
       function executeRemainingCode() {
         const inputText = document.getElementById("textInput").value;
-        console.log(
-          "I am in execute remaining code size of wordmap is",
-          wordMap.size
-        );
         if (wordMap.has(inputText)) {
           const paraIds = wordMap.get(inputText);
 
@@ -549,10 +514,6 @@
         }
         console.log(inputText);
       }
-      // while(!generatedmap){
-      //   ;
-      // }
-      console.log("I am outside");
       executeRemainingCode();
       //}
     </script>
