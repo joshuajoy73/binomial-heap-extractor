@@ -20,13 +20,14 @@
     <div>
       Sample keyword phrases: machine learning, linear regression, neural
       networks, indian economy, gross domestic product, marie curie, nobel
-      prize, modern physics
+      prize, modern physics, global warming, climate action newtork, electric bulb, income tax
     </div>
     <div id="results"></div>
     <script>
       let resultsdiv = document.getElementById("results");
       para = new Map();
       titles = new Map();
+      let filetime=0;
       let generatedmap = false;
       let wordMap = new Map();
       const inputText = document.getElementById("textInput").value;
@@ -282,9 +283,14 @@
         let threshold = 1,
           minsupport = 2;
         let positions = new Map();
+        let starttime=new Date(),endtime;
         fetch("reduced/" + paraId + ".txt")
           .then((res) => res.text())
           .then((contents) => {
+            
+             endtime=new Date();
+             filetime+=endtime-starttime;
+          
             const words = contents.toLowerCase().match(/\b\w+\b/g);
             for (let i = 0; i < words.length; i++) {
               let word = words[i];
@@ -359,6 +365,10 @@
               node.words = [node.words.join(" ")];
             });
             mapHeap(keywordlist, paraId);
+            console.log("\n");
+            console.log("Keywords of ",paraId);
+            printHeap(keywordlist);
+            console.log("\n");
           })
 
           .catch((error) =>
@@ -400,13 +410,14 @@
         return X + Y + Z;
       }
       async function iterateFiles() {
-        let paraId = "AAD";
+        let paraId = "AAI";
         const stopId = "999";
 
         while (paraId !== stopId) {
           await main(paraId);
           paraId = predecessor(paraId);
         }
+        console.log("File time = ",filetime);
         generatedmap = true;
       }
       iterateFiles();
@@ -416,6 +427,7 @@
         let inputText = document.getElementById("textInput").value;
         inputText = inputText.replace(/[^\w\s]/g, "");
         inputText = inputText.toLowerCase();
+        inputText = inputText.trim();
         if (wordMap.has(inputText)) {
           const paraIds = wordMap.get(inputText);
           console.log(paraIds);
